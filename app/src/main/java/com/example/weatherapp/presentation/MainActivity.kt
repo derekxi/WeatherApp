@@ -1,9 +1,11 @@
 package com.example.weatherapp.presentation
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -22,13 +24,15 @@ class MainActivity : ComponentActivity() {
     private lateinit var  permissionLauncher: ActivityResultLauncher<Array<String>>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        permissionLauncher = registerForActivityResult(
-//            ActivityResultContracts.RequestMultiplePermissions()
-//        ){
-//            viewModel.loadWeatherInfo()
-//        }
-        viewModel.loadWeatherInfo()
-        //permissionLauncher.launch(arrayOf())
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ){
+            viewModel.loadWeatherInfo()
+        }
+        permissionLauncher.launch(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+        ))
         setContent {
             WeatherAppTheme {
                 // A surface container using the 'background' color from the theme
@@ -36,10 +40,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting(name = "Android")
-                    WeatherCard(
-                        state = viewModel.state
-                    )
+                    if(viewModel.state.isLoading) {
+                        print("Is loading.")
+                    }
+                    SetBackgroundImage(viewModel.state)
+                    WeatherCard(viewModel.state)
                 }
             }
         }

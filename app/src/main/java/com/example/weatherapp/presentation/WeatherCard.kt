@@ -1,5 +1,7 @@
 package com.example.weatherapp.presentation
 
+import android.media.Image
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -10,6 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.systemuicontroller.SystemUiController
@@ -21,12 +26,8 @@ import java.util.*
 fun WeatherCard(
     state: WeatherState
 ){
-    val systemUiController: SystemUiController = rememberSystemUiController()
-    systemUiController.isStatusBarVisible = false
-    systemUiController.isNavigationBarVisible = false
-    systemUiController.isSystemBarsVisible = false
     state.weatherInfo?.currentWeatherData?.let { data ->
-        println(data.city)
+        print(data.city)
         Box(
             modifier = Modifier
                 .fillMaxSize(),
@@ -54,11 +55,11 @@ fun WeatherCard(
                         Text(
                             text = "${data.time.dayOfWeek.toString().uppercase()}\n" +
                                     data.weatherType.weatherDesc.uppercase(),
-                            color = Color.Black
+                            color = data.weatherType.textcolor
                         )
                         Text(
                             text = data.city.uppercase(),
-                            color = Color.Black
+                            color = data.weatherType.textcolor
                         )
                     }
                     Column(
@@ -71,6 +72,7 @@ fun WeatherCard(
                     ) {
                         Text(
                             text = "${data.temperature.toInt()}°",
+                            color = data.weatherType.textcolor,
                             fontSize = 100.sp
                         )
                     }
@@ -81,12 +83,31 @@ fun WeatherCard(
                         horizontalAlignment = Alignment.End,
                         verticalArrangement = Arrangement.Bottom
                     ) {
-                        Text(text = "Humidity: ${data.humidity}")
-                        Text(text = "Wind Speed: ${data.windSpeed}")
-                        Text(text = "Wind direction: ${Util.getWindDirection(data.windDirection)}")
+                        Text(text = "Humidity: ${data.humidity}", color = data.weatherType.textcolor)
+                        Text(text = "Wind Speed: ${data.windSpeed}", color = data.weatherType.textcolor)
+                        Text(text = "Wind direction: ${Util.getWindDirection(data.windDirection)}", color = data.weatherType.textcolor)
                     }
                 }
             }
         }
     }
 }
+
+@Composable
+fun SetBackgroundImage(
+    state: WeatherState
+) {
+    val systemUiController: SystemUiController = rememberSystemUiController()
+    systemUiController.isStatusBarVisible = false
+    systemUiController.isNavigationBarVisible = false
+    systemUiController.isSystemBarsVisible = false
+    state.weatherInfo?.currentWeatherData?.let{data ->
+        Image(
+            painter = painterResource(id = data.weatherType.backgroundRes),
+            contentDescription = null,
+            contentScale = ContentScale.FillHeight,
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
+

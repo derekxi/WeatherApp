@@ -1,4 +1,4 @@
-package com.example.weatherapp.domain.presentation
+package com.example.weatherapp.domain.repository
 
 import com.example.weatherapp.domain.util.Resource
 import com.example.weatherapp.domain.weather.WeatherInfo

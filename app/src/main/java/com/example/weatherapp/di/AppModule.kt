@@ -1,6 +1,9 @@
 package com.example.weatherapp.di
 
+import android.app.Application
 import com.example.weatherapp.data.remote.api.WeatherApi
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,5 +25,11 @@ object AppModule {
             .baseUrl("https://api.openweathermap.org/")
             .build()
             .create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFusedLocationProviderClient(app: Application): FusedLocationProviderClient {
+        return LocationServices.getFusedLocationProviderClient(app)
     }
 }

@@ -3,7 +3,7 @@ package com.example.weatherapp.data.repository
 import com.example.weatherapp.domain.util.Resource
 import com.example.weatherapp.data.mappers.toWeatherInfo
 import com.example.weatherapp.data.remote.api.WeatherApi
-import com.example.weatherapp.domain.presentation.WeatherRepository
+import com.example.weatherapp.domain.repository.WeatherRepository
 import com.example.weatherapp.domain.weather.WeatherInfo
 import javax.inject.Inject
 

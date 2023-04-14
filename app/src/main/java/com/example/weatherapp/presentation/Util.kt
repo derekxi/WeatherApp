@@ -1,5 +1,7 @@
 package com.example.weatherapp.presentation
 
+import androidx.compose.ui.graphics.Color
+
 object Util {
 
     private val DIRECTIONS = listOf(
@@ -16,7 +18,5 @@ object Util {
     fun getWindDirection(windDirection: Int): String{
         return DIRECTIONS[(windDirection % 360 / 45 % 8)]
     }
-
-
 
 }
