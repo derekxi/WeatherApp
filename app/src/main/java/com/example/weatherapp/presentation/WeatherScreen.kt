@@ -1,32 +1,83 @@
 package com.example.weatherapp.presentation
 
-import android.media.Image
+import android.Manifest
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionsRequired
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun WeatherCard(
-    state: WeatherState
+fun WeatherScreen(
+    viewModel: WeatherViewModel
 ){
-    state.weatherInfo?.currentWeatherData?.let { data ->
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val state = rememberMultiplePermissionsState(
+        permissions = listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+    )
+    
+    DisposableEffect(key1 = lifecycleOwner, effect = {
+        val observer = LifecycleEventObserver{ _, event ->
+            when (event){
+                Lifecycle.Event.ON_START -> {
+                    state.launchMultiplePermissionRequest()
+                }
+                else -> Unit
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        
+        onDispose { 
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    })
+    
+    PermissionsRequired(
+        multiplePermissionsState = state,
+        permissionsNotGrantedContent = {
+            CustomAlertDialog()
+        },
+        permissionsNotAvailableContent = {
+            CustomAlertDialog()
+        }
+    ) {
+        LaunchedEffect(key1 = Unit){
+            viewModel.loadWeatherInfo()
+        }
+    }
+    SetBackgroundImage(viewModel.state)
+    viewModel.state.weatherInfo?.currentWeatherData?.let { data ->
         print(data.city)
         Box(
             modifier = Modifier
@@ -37,7 +88,7 @@ fun WeatherCard(
             Card(
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
-                    .padding(horizontal = 20.dp, vertical = 25.dp)
+                    .padding(horizontal = 20.dp, vertical = 80.dp)
                     .height(350.dp)
                     .shadow(15.dp)
             ) {
@@ -111,3 +162,7 @@ fun SetBackgroundImage(
     }
 }
 
+@Composable
+fun CustomAlertDialog() {
+    Text(text = "CustomAlertDialog")
+}

@@ -14,6 +14,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.weatherapp.presentation.navigation.WeatherNavigation
 import com.example.weatherapp.presentation.ui.theme.WeatherAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,8 +45,8 @@ class MainActivity : ComponentActivity() {
                     if(viewModel.state.isLoading) {
                         print("Is loading.")
                     }
-                    SetBackgroundImage(viewModel.state)
-                    WeatherCard(viewModel.state)
+                    val navController = rememberNavController()
+                    WeatherNavigation(navController)
                 }
             }
         }
