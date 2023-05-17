@@ -1,4 +1,4 @@
-package com.example.weatherapp.presentation
+package com.example.weatherapp.presentation.weather_screen
 
 import com.example.weatherapp.domain.weather.WeatherInfo
 

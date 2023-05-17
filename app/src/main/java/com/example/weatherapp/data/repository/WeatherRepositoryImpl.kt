@@ -5,6 +5,9 @@ import com.example.weatherapp.data.mappers.toWeatherInfo
 import com.example.weatherapp.data.remote.api.WeatherApi
 import com.example.weatherapp.domain.repository.WeatherRepository
 import com.example.weatherapp.domain.weather.WeatherInfo
+import retrofit2.HttpException
+import java.io.IOException
+import java.lang.Exception
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
@@ -18,8 +21,11 @@ class WeatherRepositoryImpl @Inject constructor(
                     longitude = longi
                 ).toWeatherInfo()
             )
+        } catch (e: HttpException){
+            Resource.Error(e.message ?: "Oops, something went wrong")
+        } catch (e: IOException){
+            Resource.Error(e.message ?: "Couldn't reach server check your internet connection")
         } catch (e: Exception){
-            e.printStackTrace()
             Resource.Error(e.message ?: "An unknown error is occurred.")
         }
     }

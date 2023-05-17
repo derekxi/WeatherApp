@@ -5,8 +5,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.weatherapp.presentation.WeatherScreen
-import com.example.weatherapp.presentation.WeatherViewModel
+import com.example.weatherapp.presentation.weather_screen.WeatherScreen
+import com.example.weatherapp.presentation.weather_screen.WeatherViewModel
 import com.example.weatherapp.presentation.main_screen.BottomNavItem
 import com.example.weatherapp.presentation.main_screen.MainScreen
 import com.example.weatherapp.presentation.search_screen.SearchScreen

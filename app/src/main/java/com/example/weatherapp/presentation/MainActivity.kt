@@ -1,6 +1,10 @@
 package com.example.weatherapp.presentation
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,11 +16,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.presentation.navigation.WeatherNavigation
 import com.example.weatherapp.presentation.ui.theme.WeatherAppTheme
+import com.example.weatherapp.presentation.weather_screen.WeatherViewModel
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -38,13 +47,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherAppTheme {
                 // A surface container using the 'background' color from the theme
+                LockScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED)
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    if(viewModel.state.isLoading) {
-                        print("Is loading.")
-                    }
                     val navController = rememberNavController()
                     WeatherNavigation(navController)
                 }

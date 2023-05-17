@@ -1,4 +1,4 @@
-package com.example.weatherapp.presentation
+package com.example.weatherapp.presentation.weather_screen
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,8 +28,6 @@ class WeatherViewModel @Inject constructor(
                 error = null
             )
             locationTracker.getCurrentLocation()?.let { location ->
-                println(location.latitude)
-                println(location.longitude)
                 when(val result = repository.getWeatherData(location.latitude, location.longitude)) {
                     is Resource.Success -> {
                         state = state.copy(
